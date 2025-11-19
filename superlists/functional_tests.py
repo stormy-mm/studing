@@ -43,4 +43,4 @@ class NewVisitorTest(unittest.TestCase):
         # удовлетворённая, она ложится спать
 
 if __name__ == '__main__':
-    unittest.main(warnings="ignor")
+    unittest.main(warnings="ignore")
