@@ -45,6 +45,7 @@ class NewVisitorTest(unittest.TestCase):
         rows = table.find_elements(By.TAG_NAME, "tr")
         self.assertTrue(
             any(row.text == "1: Купить павлиньи перья" for row in rows),
+            "Новый элемент списка не появился в таблице"
         )
 
         # текстовое поле по прежнему приглашает её добавить ещё один элемент
