@@ -1,8 +1,10 @@
+import time
+import unittest
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import time
-import unittest
+
 
 class NewVisitorTest(unittest.TestCase):
     """Тест нового посетителя"""
@@ -14,6 +16,13 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         """Демонтаж"""
         self.browser.quit()
+
+    def check_for_row_in_list_table(self, row_text):
+        """Подтверждение строки в таблице списка"""
+        table = self.browser.find_element(By.ID, "id_list_table")
+        rows = table.find_elements(By.TAG_NAME, "tr")
+        self.assertIn(row_text, [row.text for row in rows])
+
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         """Тест: можно начать список и получить его позже"""
@@ -37,28 +46,27 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys("Купить павлиньи перья")
 
         # когда она нажимает на enter, страница обновляется, и теперь страница содержит
-        # "1: купить павлиньи перья" в качестве элемента списка
+        # "1: Купить павлиньи перья" в качестве элемента списка
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
-
-        table = self.browser.find_element(By.ID, "id_list_table")
-        rows = table.find_elements(By.TAG_NAME, "tr")
-        self.assertTrue(
-            any(row.text == "1: Купить павлиньи перья" for row in rows),
-            "Новый элемент списка не появился в таблице"
-        )
+        self.check_for_row_in_list_table("1: Купить павлиньи перья")
 
         # текстовое поле по прежнему приглашает её добавить ещё один элемент
         # она вводит "сделать мушку из павлиньих перьев"
         # (Эдит очень методична)
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys("Сделать мушку из павлиньих перьев")
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
-        self.fail("Закончить тест!")
 
         # страница снова обновляется, и теперь показывает оба элемента в её списке
+        self.check_for_row_in_list_table("1: Купить павлиньи перья")
+        self.check_for_row_in_list_table("2: Сделать мушку из павлиньих перьев")
 
         # Эдит интересно, запомнит ли её сайт список. Далее она видит, что сайт сгенерировал для неё уникальный url-адрес
         # об этом вводится небольшое сообщение с объяснениями
-
+        self.fail("Закончить тест!")
         # она посещает url-адрес - её список по прежнему там
 
         # удовлетворённая, она ложится спать
