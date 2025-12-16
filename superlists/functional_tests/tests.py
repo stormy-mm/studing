@@ -52,17 +52,14 @@ class NewVisitorTest(LiveServerTestCase):
         )
 
         # она набирает в текстовом поле "купить павлиньи перья" (вязанье рыболовных мушек)
-        input_box.send_keys("Купить павлиньи перья")
-
         # когда она нажимает на enter, страница обновляется, и теперь страница содержит
         # "1: Купить павлиньи перья" в качестве элемента списка
-        input_box.send_keys(Keys.ENTER)
+        input_box.send_keys("Купить павлиньи перья", Keys.ENTER)
 
         # текстовое поле по прежнему приглашает её добавить ещё один элемент
         # она вводит "сделать мушку из павлиньих перьев"
         input_box = self.browser.find_element(By.ID, 'id_new_item')
-        input_box.send_keys("Сделать мушку из павлиньих перьев")
-        input_box.send_keys(Keys.ENTER)
+        input_box.send_keys("Сделать мушку из павлиньих перьев", Keys.ENTER)
 
         # (Эдит очень методична)
         self.wait_for_row_in_list_table("1: Купить павлиньи перья")
@@ -93,7 +90,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         ## Мы используем новый сеанс браузера, тем самым обеспечивая, чтобы никакая
         ## информация от Эдит не прошла через данные cookie и пр
-        self.browser.quit()
+
         self.browser = webdriver.Firefox()
 
         # Френсис посещает домашнюю страницу. Нет никаких признаков списка Эдит
