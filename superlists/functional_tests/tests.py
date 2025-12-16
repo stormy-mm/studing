@@ -57,14 +57,15 @@ class NewVisitorTest(LiveServerTestCase):
         # когда она нажимает на enter, страница обновляется, и теперь страница содержит
         # "1: Купить павлиньи перья" в качестве элемента списка
         input_box.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table("1: Купить павлиньи перья")
 
         # текстовое поле по прежнему приглашает её добавить ещё один элемент
         # она вводит "сделать мушку из павлиньих перьев"
         input_box = self.browser.find_element(By.ID, 'id_new_item')
         input_box.send_keys("Сделать мушку из павлиньих перьев")
         input_box.send_keys(Keys.ENTER)
+
         # (Эдит очень методична)
+        self.wait_for_row_in_list_table("1: Купить павлиньи перья")
         self.wait_for_row_in_list_table("2: Сделать мушку из павлиньих перьев")
 
         # Эдит интересно, запомнит ли её сайт список. Далее она видит, что сайт сгенерировал для неё уникальный url-адрес
