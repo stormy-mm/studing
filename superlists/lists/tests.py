@@ -5,6 +5,22 @@ from .models import Item
 # from django.template.loader import render_to_string
 # from .views import home_page
 
+class NewListTest(TestCase):
+    """Тест нового списка"""
+
+    def test_can_save_a_POST_request(self):
+        """Тест: можно сохранить post-запрос"""
+        self.client.post('/lists/new', data={"item_text": "A new list item"})
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, "A new list item")
+
+    def test_redirects_after_POST(self):
+        """Тест: переадресует после post-запроса"""
+        response = self.client.post("/lists/new", data={"item_text": "A new list item"})
+        self.assertRedirects(response, "/lists/only-list-in-the-world/")
+        self.assertEqual(Item.objects.count(), 1)
+
 class ListViewTest(TestCase):
     """Тест представления списка"""
 
@@ -48,24 +64,6 @@ class HomePageTest(TestCase):
         # self.assertTrue(html.strip().endswith("</html>"))
 
         self.assertTemplateUsed(response, "home.html")
-
-    def test_can_save_a_POST_request(self):
-        """Тест: можно сохранить post-запрос"""
-        self.client.post('/', data={"item_text": "A new list item"})
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, "A new list item")
-
-    def test_redirects_after_POST(self):
-        """Тест: переадресует после post-запроса"""
-        response = self.client.post("/", data={"item_text": "A new list item"})
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/lists/only-list-in-the-world/")
-
-    def test_only_saves_items_when_necessary(self):
-        """Тест: сохраняет элементы, только когда нужно"""
-        self.client.get("/")
-        self.assertEqual(Item.objects.count(), 0)
 
 class ItemModeTest(TestCase):
     """Тест модели элемента списка"""
