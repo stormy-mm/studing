@@ -55,6 +55,7 @@ class NewVisitorTest(LiveServerTestCase):
         # когда она нажимает на enter, страница обновляется, и теперь страница содержит
         # "1: Купить павлиньи перья" в качестве элемента списка
         input_box.send_keys("Купить павлиньи перья", Keys.ENTER)
+        self.wait_for_row_in_list_table("1: Купить павлиньи перья")
 
         # текстовое поле по прежнему приглашает её добавить ещё один элемент
         # она вводит "сделать мушку из павлиньих перьев"
@@ -62,13 +63,10 @@ class NewVisitorTest(LiveServerTestCase):
         input_box.send_keys("Сделать мушку из павлиньих перьев", Keys.ENTER)
 
         # (Эдит очень методична)
-        self.wait_for_row_in_list_table("1: Купить павлиньи перья")
         self.wait_for_row_in_list_table("2: Сделать мушку из павлиньих перьев")
 
         # Эдит интересно, запомнит ли её сайт список. Далее она видит, что сайт сгенерировал для неё уникальный url-адрес
         # об этом вводится небольшое сообщение с объяснениями
-        self.fail("Закончить тест!")
-
         # удовлетворённая, она ложится спать
 
 
@@ -90,7 +88,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         ## Мы используем новый сеанс браузера, тем самым обеспечивая, чтобы никакая
         ## информация от Эдит не прошла через данные cookie и пр
-
+        self.browser.quit()
         self.browser = webdriver.Firefox()
 
         # Френсис посещает домашнюю страницу. Нет никаких признаков списка Эдит
@@ -113,6 +111,6 @@ class NewVisitorTest(LiveServerTestCase):
         # Опять-таки, нет ли следа от списка Эдит
         page_text = self.browser.find_element(By.TAG_NAME, "body").text
         self.assertNotIn("Купить павлиньи перья", page_text)
-        self.assertIn("Сделать молоко", page_text)
+        self.assertIn("Купить молоко", page_text)
 
         # удовлетворённые, они оба ложатся спать
