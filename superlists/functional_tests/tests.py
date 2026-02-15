@@ -96,7 +96,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         except:
             pass
 
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
 
         # Френсис посещает домашнюю страницу. Нет никаких признаков списка Эдит
         self.browser.get(self.live_server_url)
