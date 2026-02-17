@@ -22,9 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-h818$lnu1xlzgwl3-ob#w=#_@8il@5^x32kdo55b7bidv!pv(v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["192.168.31.186", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.31.186"]
 
 
 # Application definition
@@ -75,10 +75,9 @@ WSGI_APPLICATION = 'superlists.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, "database/db.sqlite3"),
+        'NAME': os.path.join(BASE_DIR, "../database/db.sqlite3"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
