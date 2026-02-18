@@ -1,9 +1,6 @@
 ### base template
 database/db.sqlite3
 
-# static
-lists/static/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
