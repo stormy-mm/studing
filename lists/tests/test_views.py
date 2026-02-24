@@ -1,3 +1,4 @@
+from django.utils.html import escape
 from django.test import TestCase
 from ..models import Item, List
 
@@ -46,6 +47,21 @@ class NewListTest(TestCase):
         response = self.client.post("/lists/new", data={"item_text": "A new list item"})
         new_list = List.objects.first()
         self.assertRedirects(response, f"/lists/{new_list.id}/")
+
+    def test_validation_errors_are_sent_back_to_home_page_template(self):
+        """Тест: ошибки валидации отправляются обратно на страницу домашней"""
+        response = self.client.post("/lists/new", data={"item_text": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "home.html")
+        excepted_error = escape("You can't have an empty list item")
+        self.assertContains(response, excepted_error)
+
+    def test_invalid_list_items_arent_saved(self):
+        """Тест: сохраняются недопустимые элементы списка"""
+        self.client.post("/lists/new", data={"item_text": ""})
+        self.assertEqual(List.objects.count(), 0)
+        self.assertEqual(Item.objects.count(), 0)
+
 
 class ListViewTest(TestCase):
     """Тест представления списка"""

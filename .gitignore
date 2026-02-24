@@ -2,6 +2,7 @@
 database/db.sqlite3
 
 deploy_tools/deploy.sh
+todo.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -219,3 +220,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+!/todo.txt
+!/todo.txt
+!/todo.txt
