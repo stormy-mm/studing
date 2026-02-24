@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Item, List
+from ..models import Item, List
 
 class NewItemTest(TestCase):
     """Тест нового элемента списка"""
