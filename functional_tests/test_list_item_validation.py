@@ -9,7 +9,6 @@ from .base import FunctionalTest
 class ItemValidationTest(FunctionalTest):
     """Тест валидации элементов списка"""
 
-    @skip
     def test_cannot_add_empty_list(self):
         """Тест: нельзя добавить пустой список"""
         # Эдит открывает домашнюю страницу и случайно пытается отправить
