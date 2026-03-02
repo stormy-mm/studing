@@ -1,7 +1,9 @@
+from unittest import skip
+
 from django.utils.html import escape
 from django.test import TestCase
 
-from ..forms import ItemForm, EMPTY_ITEM_ERROR
+from ..forms import ItemForm, EMPTY_ITEM_ERROR, DUPLICATE_ITEM_ERROR
 from ..models import Item, List
 
 
@@ -136,6 +138,21 @@ class ListViewTest(TestCase):
         """Тест на недопустимый ввод: на странице показывается ошибка"""
         response = self.post_invalid_input()
         self.assertContains(response, escape(EMPTY_ITEM_ERROR))
+
+    @skip
+    def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
+        """Тест: ошибки валидации повторяющегося элемента оканчиваются на странице списка"""
+        list1 = List.objects.create()
+        Item.objects.create(list=list1, text="textey")
+        response = self.client.post(
+            f"/lists/{list1.id}/",
+            data={"text": "textey"}
+        )
+
+        self.assertContains(response, escape(DUPLICATE_ITEM_ERROR))
+        self.assertTemplateUsed(response, "list.html")
+        self.assertEqual(Item.objects.all(), 1)
+
 
 class HomePageTest(TestCase):
     """Тест домашней страницы"""
