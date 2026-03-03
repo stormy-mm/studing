@@ -19,36 +19,35 @@ class ItemModelTest(TestCase):
 
 class ListModelTest(TestCase):
     """Тест модели списка"""
+    
+    def setUp(self):
+        """Создание экземпляра списка"""
+        self.list_ = List.objects.create()
 
     def test_item_is_related_to_list(self):
         """Тест: элемент связан со списком"""
-        list_ = List.objects.create()
         item = Item()
-        item.list = list_
+        item.list = self.list_
         item.save()
-        self.assertIn(item, list_.item_set.all())
+        self.assertIn(item, self.list_.item_set.all())
 
     def test_cannot_save_empty_list_items(self):
         """Тест: нельзя добавить пустой список"""
-        list_ = List.objects.create()
-        item = Item(list=list_, text="")
+        item = Item(list=self.list_, text="")
         with self.assertRaises(ValidationError):
             item.save()
             item.full_clean()
 
     def test_get_absolute_url(self):
         """Тест: получение абсолютного URL"""
-        list_ = List.objects.create()
-        self.assertEqual(list_.get_absolute_url(), f"/lists/{list_.id}/")
+        self.assertEqual(self.list_.get_absolute_url(), f"/lists/{self.list_.id}/")
 
     def test_duplicate_items_are_invalid(self):
         """Тест: повторы элементов недопустимы"""
-        list_ = List.objects.create()
-        Item.objects.create(list=list_, text="bla")
+        Item.objects.create(list=self.list_, text="bla")
         with self.assertRaises(ValidationError):
-            item = Item(list=list_, text="bla")
-            # item.full_clean()
-            item.save()
+            item = Item(list=self.list_, text="bla")
+            item.full_clean()
 
     def test_CAN_save_same_item_to_different_lists(self):
         """Тест: МОЖЕТ сохранить тот же элемент в разные списки"""
