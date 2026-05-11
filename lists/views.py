@@ -29,6 +29,9 @@ class ViewAndAddToList(DetailView, CreateView):
         return self.form_class(for_list=self.object, data=post if post else None)
 
 
+def my_lists(request, email):
+    return render(request, "my_lists.html")
+
 # def home_page(request):
 #     """Домашняя страница"""
 #     return render(request, "home.html", {"form": ItemForm()})
