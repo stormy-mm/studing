@@ -1,8 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.utils.html import escape
 from django.test import TestCase
 
 from ..forms import ItemForm, EMPTY_ITEM_ERROR, DUPLICATE_ITEM_ERROR, ExistingListItemForm
 from ..models import Item, List
+
+User = get_user_model()
 
 
 class NewListTest(TestCase):
@@ -44,8 +47,24 @@ class NewListTest(TestCase):
         self.assertIsInstance(response.context["form"], ItemForm)
 
     def test_my_lists_url_renders_template(self):
+        User.objects.create(email="a@b.com")
         response = self.client.get("/lists/users/a@b.com/")
         self.assertTemplateUsed(response, "my_lists.html")
+
+    def test_passes_lists_url_owner_to_template(self):
+        """Тест: передается правильный владелец в шаблон"""
+        User.objects.create(email="wrong@b.com")
+        correct_user = User.objects.create(email="a@b.com")
+        response = self.client.get('/lists/users/a@b.com/')
+        self.assertEqual(response.context['owner'], correct_user)
+
+    def test_list_owner_is_saved_if_user_is_authenticated(self):
+        """Тест: владелец сохраняется, если пользователь аутентифицирован"""
+        user = User.objects.create(email="a@b.com")
+        self.client.force_login(user)
+        self.client.post('/lists/new', data={'text': 'new_item'})
+        list_ = List.objects.first()
+        self.assertEqual(list_.owner, user)
 
 
 class ListViewTest(TestCase):

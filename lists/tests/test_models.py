@@ -19,7 +19,7 @@ class ItemModelTest(TestCase):
 
 class ListModelTest(TestCase):
     """Тест модели списка"""
-    
+
     def setUp(self):
         """Создание экземпляра списка"""
         self.list_ = List.objects.create()
@@ -40,7 +40,6 @@ class ListModelTest(TestCase):
 
     def test_get_absolute_url(self):
         """Тест: получение абсолютного URL"""
-        print(self.list_.get_absolute_url())
         self.assertEqual(self.list_.get_absolute_url(), f"/lists/{self.list_.id}/")
 
     def test_duplicate_items_are_invalid(self):
@@ -56,7 +55,7 @@ class ListModelTest(TestCase):
         list2 = List.objects.create()
         Item.objects.create(list=list1, text="bla")
         item = Item(list=list2, text="bla")
-        item.full_clean() # не должно вызывать исключение
+        item.full_clean()  # не должно вызывать исключение
 
     def test_list_ordering(self):
         """Тест: упорядочивание списков"""
